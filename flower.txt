@@ -1,0 +1,76 @@
+thuylaw
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stack = [];
+
+function initTree(){
+    stack.push({
+        x: canvas.width/2,
+        y: canvas.height - 50,
+        length: 160,   // 🌳 cây to hơn
+        angle: Math.PI/2
+    });
+}
+
+function drawPetal(x,y){
+    ctx.fillStyle = Math.random()>0.5?"snow":"lightcoral";
+    ctx.beginPath();
+    ctx.arc(x,y,Math.random()*5+2,0,Math.PI*2);
+    ctx.fill();
+}
+
+function drawStep(){
+    if(stack.length === 0) return;
+
+    // ⚡ mỗi frame vẽ nhiều nhánh -> nhanh hơn
+    for(let i=0;i<6;i++){
+        if(stack.length === 0) break;
+
+        const branch = stack.pop();
+        const {x,y,length,angle} = branch;
+
+        if(length < 8){
+            drawPetal(x,y);
+            continue;
+        }
+
+        const x2 = x + length * Math.cos(angle);
+        const y2 = y - length * Math.sin(angle);
+
+        ctx.strokeStyle = length < 25 ? "lightcoral" : "sienna";
+        ctx.lineWidth = length / 12;
+
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+
+        const randomAngle = (Math.random()*20+15)*Math.PI/180;
+        const randomLength = Math.random()*15;
+
+        stack.push({
+            x:x2,
+            y:y2,
+            length:length-randomLength,
+            angle:angle-randomAngle
+        });
+
+        stack.push({
+            x:x2,
+            y:y2,
+            length:length-randomLength,
+            angle:angle+randomAngle
+        });
+    }
+
+    requestAnimationFrame(drawStep);
+}
+
+initTree();
+drawStep();
+</script>
