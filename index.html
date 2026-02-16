@@ -1,4 +1,38 @@
-thuylaw
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Flowering Tree</title>
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background:wheat;
+}
+canvas{
+    position:absolute;
+    top:0;
+    left:0;
+}
+.text{
+    position:absolute;
+    top:30%;
+    width:100%;
+    text-align:center;
+    font-size:60px;
+    font-weight:bold;
+    color:white;
+    text-shadow:0 0 15px pink, 0 0 30px red;
+    font-family:cursive;
+    z-index:10;
+}
+</style>
+</head>
+<body>
+
+<div class="text">Thuỳ Lâm</div>
+<canvas id="canvas"></canvas>
+
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -11,38 +45,38 @@ let stack = [];
 function initTree(){
     stack.push({
         x: canvas.width/2,
-        y: canvas.height - 50,
-        length: 160,   // 🌳 cây to hơn
-        angle: Math.PI/2
+        y: canvas.height - 20,
+        length: 150,
+        angle: -Math.PI/2
     });
 }
 
 function drawPetal(x,y){
     ctx.fillStyle = Math.random()>0.5?"snow":"lightcoral";
     ctx.beginPath();
-    ctx.arc(x,y,Math.random()*5+2,0,Math.PI*2);
+    ctx.arc(x,y,Math.random()*4+2,0,Math.PI*2);
     ctx.fill();
 }
 
 function drawStep(){
     if(stack.length === 0) return;
 
-    // ⚡ mỗi frame vẽ nhiều nhánh -> nhanh hơn
-    for(let i=0;i<6;i++){
+    for(let i=0;i<8;i++){
+
         if(stack.length === 0) break;
 
         const branch = stack.pop();
         const {x,y,length,angle} = branch;
 
-        if(length < 8){
+        if(length < 10){
             drawPetal(x,y);
             continue;
         }
 
         const x2 = x + length * Math.cos(angle);
-        const y2 = y - length * Math.sin(angle);
+        const y2 = y + length * Math.sin(angle);
 
-        ctx.strokeStyle = length < 25 ? "lightcoral" : "sienna";
+        ctx.strokeStyle = length < 30 ? "lightcoral" : "sienna";
         ctx.lineWidth = length / 12;
 
         ctx.beginPath();
@@ -74,3 +108,6 @@ function drawStep(){
 initTree();
 drawStep();
 </script>
+
+</body>
+</html>
